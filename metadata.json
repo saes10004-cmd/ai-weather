@@ -1,0 +1,6 @@
+{
+  "name": "Weather App",
+  "description": "A clean, highly polished weather forecast application with interactive daily forecasts, detailed hourly estimates, and personalized AI styling & activity advice powered by Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
