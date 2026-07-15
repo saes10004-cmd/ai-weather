@@ -11,11 +11,9 @@ interface SearchHeaderProps {
 }
 
 const PRELOADED_CITIES: SavedCity[] = [
+  { name: "단양", lat: 36.9845, lon: 128.3644, country: "대한민국" },
+  { name: "화성", lat: 37.1995, lon: 126.8312, country: "대한민국" },
   { name: "서울", lat: 37.5665, lon: 126.978, country: "대한민국" },
-  { name: "도쿄", lat: 35.6895, lon: 139.6917, country: "일본" },
-  { name: "뉴욕", lat: 40.7128, lon: -74.0059, country: "미국" },
-  { name: "런던", lat: 51.5074, lon: -0.1278, country: "영국" },
-  { name: "시드니", lat: -33.8688, lon: 151.2093, country: "호주" },
 ];
 
 export default function SearchHeader({
@@ -39,10 +37,22 @@ export default function SearchHeader({
     const cached = localStorage.getItem("aura_weather_saved_cities");
     if (cached) {
       try {
-        setSavedCities(JSON.parse(cached));
+        const parsed = JSON.parse(cached);
+        // Force reset if the list contains any of the old defaults or extra pre-populated cities to strictly keep only 단양, 화성, 서울
+        const hasOldDefault = parsed.some((c: any) => 
+          ["도쿄", "뉴욕", "런던", "시드니", "수원시", "수원"].includes(c.name)
+        );
+        if (hasOldDefault) {
+          setSavedCities(PRELOADED_CITIES);
+          localStorage.setItem("aura_weather_saved_cities", JSON.stringify(PRELOADED_CITIES));
+        } else {
+          setSavedCities(parsed);
+        }
       } catch (e) {
         console.error(e);
       }
+    } else {
+      localStorage.setItem("aura_weather_saved_cities", JSON.stringify(PRELOADED_CITIES));
     }
   }, []);
 
